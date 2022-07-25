@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.booking.model;
 
 import lombok.Data;
 import ru.practicum.shareit.booking.Status;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
  CANCELED — бронирование отменено создателем.
  */
 @Data
-public class BookingDto {
+public class Booking {
     private Long id;
     private LocalDate start;
     private LocalDate end;

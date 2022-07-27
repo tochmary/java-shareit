@@ -1,10 +1,11 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.common.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserService;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item updateItem(long userId, long itemId, Item item) {
         userService.checkUser(userId);
-        if (itemRepository.getItemsByUserId(userId).stream().noneMatch(i -> i.getId() == itemId)) {
+        if (isExistItemIdForUserId(userId, itemId)) {
             throw new NotFoundException("У Пользователя с id " + userId + " не существует item c id " + itemId + "!");
         }
         item.setId(itemId);
@@ -48,5 +49,9 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getItemsByText(long userId, String text) {
         userService.checkUser(userId);
         return itemRepository.getItemsByText(text);
+    }
+
+    private boolean isExistItemIdForUserId(long userId, long itemId) {
+        return itemRepository.getItemsByUserId(userId).stream().noneMatch(i -> i.getId() == itemId);
     }
 }

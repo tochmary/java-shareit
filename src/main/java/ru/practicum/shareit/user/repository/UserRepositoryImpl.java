@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -60,11 +60,6 @@ public class UserRepositoryImpl implements UserRepository {
     public void deleteUser(long userId) {
         users.remove(userId);
         log.info("Удален пользователь с id: {}", userId);
-    }
-
-    @Override
-    public boolean isUserExist(long userId) {
-        return getUserById(userId).isPresent();
     }
 
     private long generateId() {

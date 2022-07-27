@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.repository;
 
 import ru.practicum.shareit.user.model.User;
 
@@ -17,6 +17,4 @@ public interface UserRepository {
     Optional<User> getUserById(Long userId);
 
     void deleteUser(long userId);
-
-    boolean isUserExist(long userId);
 }

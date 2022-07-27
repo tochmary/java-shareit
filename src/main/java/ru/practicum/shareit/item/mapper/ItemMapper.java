@@ -1,8 +1,11 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.mapper;
 
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ItemMapper {
 
@@ -25,5 +28,11 @@ public class ItemMapper {
                 owner,
                 itemDto.getRequest()
         );
+    }
+
+    public static List<ItemDto> toItemDtoList(List<Item> itemList) {
+        return itemList.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 }

@@ -15,18 +15,18 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getRequest()
+                item.getRequestId()
         );
     }
 
-    public static Item toItem(ItemDto itemDto, User owner) {
+    public static Item toItem(ItemDto itemDto, Long ownerId) {
         return new Item(
                 itemDto.getId(),
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                owner,
-                itemDto.getRequest()
+                ownerId,
+                itemDto.getRequestId()
         );
     }
 

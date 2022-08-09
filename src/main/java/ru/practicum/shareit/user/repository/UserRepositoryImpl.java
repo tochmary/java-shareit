@@ -1,14 +1,21 @@
 package ru.practicum.shareit.user.repository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
 
-@Slf4j
+//@Slf4j
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl {
+    private final UserRepository userRepository;
+
+    public UserRepositoryImpl(@Lazy UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
+/*
     private long id = 1;
     private final Map<Long, User> users = new HashMap<>();
 
@@ -65,4 +72,5 @@ public class UserRepositoryImpl implements UserRepository {
     private long generateId() {
         return id++;
     }
+ */
 }

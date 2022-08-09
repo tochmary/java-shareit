@@ -1,15 +1,17 @@
 package ru.practicum.shareit.item.repository;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.model.Item;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-@Slf4j
+//@Slf4j
 @Repository
-public class ItemRepositoryImpl implements ItemRepository {
+public class ItemRepositoryImpl {
+    private final ItemRepository itemRepository;
+
+    public ItemRepositoryImpl(@Lazy ItemRepository itemRepository){
+        this.itemRepository = itemRepository;
+    }
+    /*
     private long id = 1;
     private final Map<Long, Map<Long, Item>> items = new HashMap<>();
 
@@ -77,4 +79,5 @@ public class ItemRepositoryImpl implements ItemRepository {
     private long generateId() {
         return id++;
     }
+     */
 }

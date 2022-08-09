@@ -12,10 +12,11 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findItemsByOwnerId(long userId);
 
-    @Query(value = "select it.* " +
-            "from items as it "+
-            "where it.is_available = true "+
-            "and (it.name ilike '%'||:text||'%' or it.description ilike '%'||:text||'%')", nativeQuery = true)
+    @Query("select it " +
+            "from Item as it "+
+            "where it.available = true "+
+            "and (lower(it.name) like lower(concat('%', :text, '%')) " +
+              "or lower(it.description) like lower(concat('%', :text, '%')))")
     List<Item> getItemsByText(@Param("text") String text);
 
     //List<Item> findItemsByAvailableIsTrueAndNameIsLikeIgnoreCaseOrAvailableIsTrueAndDescriptionIsLikeIgnoreCase(String text1, String text2);

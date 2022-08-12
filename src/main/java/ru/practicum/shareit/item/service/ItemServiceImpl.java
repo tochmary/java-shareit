@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public Item addItem(long userId, Item item) {
         userService.checkUser(userId);
-        //item.setOwner(userService.getUserById(userId));
+        item.setOwner(userService.getUserById(userId));
         //return itemRepository.addItem(userId, item);
         return itemRepository.save(item);
     }

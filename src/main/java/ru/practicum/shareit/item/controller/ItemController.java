@@ -6,7 +6,6 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
@@ -37,7 +36,7 @@ public class ItemController {
     public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
                            @Valid @RequestBody ItemDto itemDto) {
         //User user = userService.getUserById(userId);
-        Item item = ItemMapper.toItem(itemDto, userId);
+        Item item = ItemMapper.toItem(itemDto);
         item = itemService.addItem(userId, item);
         return ItemMapper.toItemDto(item);
     }
@@ -47,7 +46,7 @@ public class ItemController {
                               @PathVariable long itemId,
                               @RequestBody ItemDto itemDto) {
         //User user = userService.getUserById(userId);
-        Item item = ItemMapper.toItem(itemDto, userId);
+        Item item = ItemMapper.toItem(itemDto);
         item = itemService.updateItem(userId, itemId, item);
         return ItemMapper.toItemDto(item);
     }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.practicum.shareit.requests.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -42,6 +43,8 @@ public class Item {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User owner;
 
-    @Column(name = "request_id")
-    private Long requestId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "request_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private ItemRequest request;
 }

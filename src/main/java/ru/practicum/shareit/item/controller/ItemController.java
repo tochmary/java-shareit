@@ -2,34 +2,41 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.item.dto.ItemWithBookDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
-    private final UserService userService;
+    private final BookingService bookingService;
 
     @GetMapping
-    public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemWithBookDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
         List<Item> itemList = itemService.getItemsByUserId(userId);
-        return ItemMapper.toItemDtoList(itemList);
+        return itemList.stream()
+                .map(item -> getItemWithBookDto(bookingService, userId, item))
+                .sorted(Comparator.comparing(ItemWithBookDto::getId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
-                                   @PathVariable long itemId) {
+    public ItemWithBookDto getItemByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
+                                           @PathVariable long itemId) {
         Item item = itemService.getItemId(userId, itemId);
-        return ItemMapper.toItemDto(item);
+        return getItemWithBookDto(bookingService, userId, item);
     }
 
     @PostMapping
@@ -59,5 +66,11 @@ public class ItemController {
         }
         List<Item> itemList = itemService.getItemsByText(userId, text);
         return ItemMapper.toItemDtoList(itemList);
+    }
+
+    private ItemWithBookDto getItemWithBookDto(BookingService bookingService, long userId, Item item) {
+        Booking lastBooking = bookingService.getLastBookingByItemId(userId, item);
+        Booking nextBooking = bookingService.getNextBookingByItemId(userId, item);
+        return ItemMapper.toItemWithBookDto(item, lastBooking, nextBooking);
     }
 }

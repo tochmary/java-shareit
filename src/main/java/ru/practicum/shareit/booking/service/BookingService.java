@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import ru.practicum.shareit.booking.State;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
@@ -15,4 +16,8 @@ public interface BookingService {
     List<Booking> getBookingsByBookerId(long userId, State state);
 
     List<Booking> getBookingsByOwnerId(long userId, State state);
+
+    Booking getLastBookingByItemId(long userId, Item item);
+
+    Booking getNextBookingByItemId(long userId, Item item);
 }

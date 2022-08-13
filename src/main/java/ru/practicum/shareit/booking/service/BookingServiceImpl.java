@@ -42,7 +42,6 @@ public class BookingServiceImpl implements BookingService {
         return booking;
     }
 
-
     @Override
     @Transactional
     public Booking addBooking(long userId, long itemId, Booking booking) {
@@ -117,7 +116,7 @@ public class BookingServiceImpl implements BookingService {
         userService.checkUser(userId);
         log.debug("Получения бронирования вещей userId {} со state {}", userId, state);
         List<Item> itemList = itemService.getItemsByUserId(userId);
-        List<Booking> bookingList = itemList.stream()
+        return itemList.stream()
                 .flatMap(item -> {
                     long itemId = item.getId();
                     List<Booking> bookings;
@@ -142,7 +141,26 @@ public class BookingServiceImpl implements BookingService {
                     return bookings.stream();
                 })
                 .collect(Collectors.toList());
-        return bookingList;
+    }
+
+    @Override
+    public Booking getLastBookingByItemId(long userId, Item item) {
+        log.debug("Получения последнего бронирования вещи с itemId {} для владельца с userId {}", item.getId(), userId);
+        userService.checkUser(userId);
+        if (userId == item.getOwner().getId()) {
+            return bookingRepository.findFirstByItemIdAndEndBeforeOrderByEndDesc(item.getId(), LocalDateTime.now());
+        }
+        return null;
+    }
+
+    @Override
+    public Booking getNextBookingByItemId(long userId, Item item) {
+        log.debug("Получения ближайшего бронирования вещи с itemId {} для владельца с userId {}", item.getId(), userId);
+        userService.checkUser(userId);
+        if (userId == item.getOwner().getId()) {
+            return bookingRepository.findFirstByItemIdAndStartAfterOrderByStartAsc(item.getId(), LocalDateTime.now());
+        }
+        return null;
     }
 
     private Booking getBookingById(long bookingId) {

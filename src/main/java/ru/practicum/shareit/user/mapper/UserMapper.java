@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.mapper;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ public class UserMapper {
     public static List<UserDto> getUserDtoList(List<User> userList) {
         return userList.stream()
                 .map(UserMapper::toUserDto)
+                .sorted(Comparator.comparing(UserDto::getId))
                 .collect(Collectors.toList());
     }
 }

@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.item.dto.ItemWithBookDto;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemFullDto;
+import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -14,6 +17,7 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,17 +28,17 @@ public class ItemController {
     private final BookingService bookingService;
 
     @GetMapping
-    public List<ItemWithBookDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemFullDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
         List<Item> itemList = itemService.getItemsByUserId(userId);
         return itemList.stream()
                 .map(item -> getItemWithBookDto(bookingService, userId, item))
-                .sorted(Comparator.comparing(ItemWithBookDto::getId))
+                .sorted(Comparator.comparing(ItemFullDto::getId))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{itemId}")
-    public ItemWithBookDto getItemByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
-                                           @PathVariable long itemId) {
+    public ItemFullDto getItemByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
+                                       @PathVariable long itemId) {
         Item item = itemService.getItemId(userId, itemId);
         return getItemWithBookDto(bookingService, userId, item);
     }
@@ -68,9 +72,19 @@ public class ItemController {
         return ItemMapper.toItemDtoList(itemList);
     }
 
-    private ItemWithBookDto getItemWithBookDto(BookingService bookingService, long userId, Item item) {
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+                              @PathVariable long itemId,
+                              @Valid @RequestBody CommentDto commentDto) {
+        Comment comment = CommentMapper.toComment(commentDto);
+        comment = itemService.addComment(userId, itemId, comment);
+        return CommentMapper.toCommentDto(comment);
+    }
+
+    private ItemFullDto getItemWithBookDto(BookingService bookingService, long userId, Item item) {
         Booking lastBooking = bookingService.getLastBookingByItemId(userId, item);
         Booking nextBooking = bookingService.getNextBookingByItemId(userId, item);
-        return ItemMapper.toItemWithBookDto(item, lastBooking, nextBooking);
+        Set<Comment> comments = itemService.getCommentsByItemId(item.getId());
+        return ItemMapper.toItemFullDto(item, lastBooking, nextBooking, comments);
     }
 }

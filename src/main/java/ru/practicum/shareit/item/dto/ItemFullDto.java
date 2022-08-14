@@ -6,6 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * id — уникальный идентификатор вещи;
@@ -14,10 +15,11 @@ import javax.validation.constraints.NotNull;
  * available — статус о том, доступна или нет вещь для аренды;
  * lastBooking — последнее бронирование;
  * nextBooking - следующее бронирование;
+ * comments - отзывы;
  */
 @Data
 @AllArgsConstructor
-public class ItemWithBookDto {
+public class ItemFullDto {
     private Long id;
     @NotBlank
     private String name;
@@ -29,4 +31,6 @@ public class ItemWithBookDto {
     private BookingDto lastBooking;
 
     private BookingDto nextBooking;
+
+    private Set<CommentDto> comments;
 }

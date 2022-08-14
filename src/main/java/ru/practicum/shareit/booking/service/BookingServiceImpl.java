@@ -34,7 +34,6 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = getBookingById(bookingId);
         long bookerId = booking.getBooker().getId();
         long ownerId = booking.getItem().getOwner().getId();
-        //BadRequestException
         if (bookerId != userId && ownerId != userId) {
             throw new NotFoundException("Посмотреть бронирование может только автор бронирования или владелец вещи!");
         }

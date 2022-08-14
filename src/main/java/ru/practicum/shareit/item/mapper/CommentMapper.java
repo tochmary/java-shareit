@@ -1,13 +1,9 @@
 package ru.practicum.shareit.item.mapper;
 
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CommentMapper {
@@ -20,10 +16,10 @@ public class CommentMapper {
         );
     }
 
-    public static Set<CommentDto> toCommentDtoSet(Set<Comment> comments) {
+    public static List<CommentDto> toCommentDtoList(List<Comment> comments) {
         return comments.stream()
                 .map(CommentMapper::toCommentDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     public static Comment toComment(CommentDto commentDto) {

@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 
 /**
  * id — уникальный идентификатор вещи;
@@ -32,5 +32,5 @@ public class ItemFullDto {
 
     private BookingDto nextBooking;
 
-    private Set<CommentDto> comments;
+    private List<CommentDto> comments;
 }

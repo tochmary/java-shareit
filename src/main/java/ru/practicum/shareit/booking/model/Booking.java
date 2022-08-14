@@ -44,13 +44,11 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "item_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    //@JsonIgnore
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "booker_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    //@JsonIgnore
     private User booker;
 
     @Column

@@ -9,7 +9,6 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ItemMapper {
@@ -33,7 +32,7 @@ public class ItemMapper {
     public static ItemFullDto toItemFullDto(Item item,
                                             Booking lastBooking,
                                             Booking nextBooking,
-                                            Set<Comment> comments) {
+                                            List<Comment> comments) {
         return new ItemFullDto(
                 item.getId(),
                 item.getName(),
@@ -41,7 +40,7 @@ public class ItemMapper {
                 item.getAvailable(),
                 lastBooking == null ? null : BookingMapper.toBookingDto(lastBooking),
                 nextBooking == null ? null : BookingMapper.toBookingDto(nextBooking),
-                comments == null ? null : CommentMapper.toCommentDtoSet(comments)
+                comments == null ? null : CommentMapper.toCommentDtoList(comments)
         );
     }
 

@@ -30,7 +30,7 @@ public class BookingMapper {
     }
 
     public static Booking toBooking(BookingDtoIn bookingDtoIn) {
-        Booking booking =  new Booking();
+        Booking booking = new Booking();
         booking.setStart(bookingDtoIn.getStart());
         booking.setEnd(bookingDtoIn.getEnd());
         return booking;

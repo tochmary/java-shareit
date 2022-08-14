@@ -5,19 +5,18 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.item.dto.ItemDto;
 
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -46,7 +45,6 @@ public class ItemController {
     @PostMapping
     public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
                            @Valid @RequestBody ItemDto itemDto) {
-        //User user = userService.getUserById(userId);
         Item item = ItemMapper.toItem(itemDto);
         item = itemService.addItem(userId, item);
         return ItemMapper.toItemDto(item);
@@ -56,7 +54,6 @@ public class ItemController {
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @PathVariable long itemId,
                               @RequestBody ItemDto itemDto) {
-        //User user = userService.getUserById(userId);
         Item item = ItemMapper.toItem(itemDto);
         item = itemService.updateItem(userId, itemId, item);
         return ItemMapper.toItemDto(item);
@@ -74,8 +71,8 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @PathVariable long itemId,
-                              @Valid @RequestBody CommentDto commentDto) {
+                                 @PathVariable long itemId,
+                                 @Valid @RequestBody CommentDto commentDto) {
         Comment comment = CommentMapper.toComment(commentDto);
         comment = itemService.addComment(userId, itemId, comment);
         return CommentMapper.toCommentDto(comment);
@@ -84,7 +81,7 @@ public class ItemController {
     private ItemFullDto getItemWithBookDto(BookingService bookingService, long userId, Item item) {
         Booking lastBooking = bookingService.getLastBookingByItemId(userId, item);
         Booking nextBooking = bookingService.getNextBookingByItemId(userId, item);
-        Set<Comment> comments = itemService.getCommentsByItemId(item.getId());
+        List<Comment> comments = itemService.getCommentsByItemId(item.getId());
         return ItemMapper.toItemFullDto(item, lastBooking, nextBooking, comments);
     }
 }

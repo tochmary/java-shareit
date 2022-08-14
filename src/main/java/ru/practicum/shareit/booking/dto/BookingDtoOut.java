@@ -36,9 +36,7 @@ public class BookingDtoOut {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime end;
-    //@JsonIgnoreProperties({"hibernateLazyInitializer"})
     private ItemDto item;
-    //@JsonIgnoreProperties({"hibernateLazyInitializer"})
     private UserDto booker;
     private Status status;
 }

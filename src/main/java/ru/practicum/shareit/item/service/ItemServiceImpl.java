@@ -16,7 +16,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -30,16 +29,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getItemsByUserId(long userId) {
-        //return itemRepository.getItemsByUserId(userId);
         return itemRepository.findItemsByOwnerId(userId);
     }
 
     @Override
     public Item getItemId(long userId, long itemId) {
         userService.checkUser(userId);
-        /*return itemRepository.getItemId(itemId).orElseThrow(
-                () -> new RuntimeException("Item с id = " + itemId + " не существует!")
-        );*/
         return getItemById(itemId);
     }
 
@@ -48,7 +43,6 @@ public class ItemServiceImpl implements ItemService {
     public Item addItem(long userId, Item item) {
         userService.checkUser(userId);
         item.setOwner(userService.getUserById(userId));
-        //return itemRepository.addItem(userId, item);
         return itemRepository.save(item);
     }
 
@@ -59,8 +53,6 @@ public class ItemServiceImpl implements ItemService {
         if (isExistItemIdForUserId(userId, itemId)) {
             throw new NotFoundException("У Пользователя с id " + userId + " не существует item c id " + itemId + "!");
         }
-        //item.setId(itemId);
-        //return itemRepository.updateItem(userId, item);
         Item itemNew = itemRepository.findById(itemId).orElseThrow(
                 () -> new NotFoundException("Item с id = " + itemId + " не существует!")
         );
@@ -80,7 +72,6 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getItemsByText(long userId, String text) {
         log.info("getItemsByText {} {}", userId, text);
         userService.checkUser(userId);
-        //return itemRepository.getItemsByText(text);
         return itemRepository.getItemsByText(text);
     }
 
@@ -99,8 +90,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Set<Comment> getCommentsByItemId(long itemId) {
-        return commentRepository.findAllByItemId(itemId);
+    public List<Comment> getCommentsByItemId(long itemId) {
+        return commentRepository.findAllByItemIdOrderByCreatedDesc(itemId);
     }
 
     private boolean isExistItemIdForUserId(long userId, long itemId) {

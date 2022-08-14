@@ -4,7 +4,6 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ItemService {
     List<Item> getItemsByUserId(long userId);
@@ -19,5 +18,5 @@ public interface ItemService {
 
     Comment addComment(long userId, long itemId, Comment comment);
 
-    Set<Comment> getCommentsByItemId(long itemId);
+    List<Comment> getCommentsByItemId(long itemId);
 }

@@ -29,11 +29,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getItemsByUserId(long userId) {
+        log.debug("Получение списка вещей владельца с userId={}", userId);
         return itemRepository.findItemsByOwnerId(userId);
     }
 
     @Override
     public Item getItemId(long userId, long itemId) {
+        log.debug("Просмотр вещи с itemId={}", itemId);
         userService.checkUser(userId);
         return getItemById(itemId);
     }
@@ -41,6 +43,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item addItem(long userId, Item item) {
+        log.debug("Добавление вещи {} пользователем с userId={}", item, userId);
         userService.checkUser(userId);
         item.setOwner(userService.getUserById(userId));
         return itemRepository.save(item);
@@ -49,13 +52,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item updateItem(long userId, long itemId, Item item) {
+        log.debug("Обновление вещи {} с itemId={} пользователем с userId={}", item, itemId, userId);
         userService.checkUser(userId);
         if (isExistItemIdForUserId(userId, itemId)) {
             throw new NotFoundException("У Пользователя с id " + userId + " не существует item c id " + itemId + "!");
         }
-        Item itemNew = itemRepository.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Item с id = " + itemId + " не существует!")
-        );
+        Item itemNew = getItemById(itemId);
         if (item.getAvailable() != null) {
             itemNew.setAvailable(item.getAvailable());
         }
@@ -70,7 +72,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getItemsByText(long userId, String text) {
-        log.info("getItemsByText {} {}", userId, text);
+        log.debug("Поиск вещей с текстом={} в названии и описании пользователем с userId={}", text, userId);
         userService.checkUser(userId);
         return itemRepository.getItemsByText(text);
     }
@@ -78,6 +80,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Comment addComment(long userId, long itemId, Comment comment) {
+        log.debug("Добавление отзыва {} пользователем с userId={} о вещи с itemId={}", comment, userId, itemId);
         if (bookingRepository.findByBookerIdAndItemIdAndEndBefore(userId, itemId, LocalDateTime.now()).isEmpty()) {
             throw new BadRequestException("У Пользователя с userId=" + userId + " нет завершенных бронирований " +
                     "вещи c itemId=" + itemId + "!");
@@ -91,6 +94,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Comment> getCommentsByItemId(long itemId) {
+        log.debug("Получения отзывов о вещи с itemId={}", itemId);
         return commentRepository.findAllByItemIdOrderByCreatedDesc(itemId);
     }
 
@@ -100,7 +104,7 @@ public class ItemServiceImpl implements ItemService {
 
     private Item getItemById(long itemId) {
         return itemRepository.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Item с id = " + itemId + " не существует!")
+                () -> new NotFoundException("Вещи с itemId=" + itemId + " не существует!")
         );
     }
 }

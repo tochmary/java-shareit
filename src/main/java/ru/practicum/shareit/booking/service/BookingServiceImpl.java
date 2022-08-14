@@ -30,6 +30,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking getBookingById(long userId, long bookingId) {
+        log.debug("Просмотр бронирования c bookingId={} пользователем с userId={}", bookingId, userId);
         userService.checkUser(userId);
         Booking booking = getBookingById(bookingId);
         long bookerId = booking.getBooker().getId();
@@ -44,6 +45,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public Booking addBooking(long userId, long itemId, Booking booking) {
+        log.debug("Добавление бронирования {} вещи с itemId={} пользователем с userId={}", booking, itemId, userId);
         if (booking.getStart().isBefore(LocalDateTime.now()) || booking.getEnd().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("Нельзя забронировать вещь на прошлую дату!");
         }
@@ -57,9 +59,8 @@ public class BookingServiceImpl implements BookingService {
         booking.setItem(item);
         booking.setBooker(userService.getUserById(userId));
         booking.setStatus(Status.WAITING);
-        log.debug("Добавление бронирования {}", booking);
-        booking = bookingRepository.save(booking);
 
+        booking = bookingRepository.save(booking);
         log.debug("Добавлено бронирования {}", booking);
         return booking;
     }
@@ -67,9 +68,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public Booking updateBookingStatus(long userId, long bookingId, Boolean approved) {
-        log.debug("updateBookingStatus");
+        log.debug("Проставление статуса бронирования с bookingId={} пользователем с userId={}", bookingId, userId);
         Booking booking = getBookingById(bookingId);
-        //BadRequestException
         if (!Objects.equals(booking.getItem().getOwner().getId(), userId)) {
             throw new NotFoundException("Подтвердить или отклонить запрос на бронирование может только владелец вещи!");
         }
@@ -78,7 +78,7 @@ public class BookingServiceImpl implements BookingService {
         }
         Status status = approved ? Status.APPROVED : Status.REJECTED;
         booking.setStatus(status);
-        log.debug("Проставление статуса бронирования {}", status);
+
         booking = bookingRepository.save(booking);
         log.debug("Успешное проставление статуса для бронирования {}", booking);
         return booking;
@@ -86,8 +86,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getBookingsByBookerId(long userId, State state) {
+        log.debug("Получение бронирования для userId={} со state={}", userId, state);
         userService.checkUser(userId);
-        log.debug("Получения бронирования для userId {} со state {}", userId, state);
         List<Booking> bookingList;
         switch (state) {
             case WAITING:
@@ -113,7 +113,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookingsByOwnerId(long userId, State state) {
         userService.checkUser(userId);
-        log.debug("Получения бронирования вещей userId {} со state {}", userId, state);
+        log.debug("Получение бронирования вещей userId={} со state={}", userId, state);
         List<Item> itemList = itemService.getItemsByUserId(userId);
         return itemList.stream()
                 .flatMap(item -> {
@@ -144,7 +144,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking getLastBookingByItemId(long userId, Item item) {
-        log.debug("Получения последнего бронирования вещи с itemId {} для владельца с userId {}", item.getId(), userId);
+        log.debug("Получение последнего бронирования вещи с itemId={} для владельца с userId={}", item.getId(), userId);
         userService.checkUser(userId);
         if (userId == item.getOwner().getId()) {
             return bookingRepository.findFirstByItemIdAndEndBeforeOrderByEndDesc(item.getId(), LocalDateTime.now());
@@ -154,7 +154,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking getNextBookingByItemId(long userId, Item item) {
-        log.debug("Получения ближайшего бронирования вещи с itemId {} для владельца с userId {}", item.getId(), userId);
+        log.debug("Получение ближайшего бронирования вещи с itemId={} для владельца с userId={}", item.getId(), userId);
         userService.checkUser(userId);
         if (userId == item.getOwner().getId()) {
             return bookingRepository.findFirstByItemIdAndStartAfterOrderByStartAsc(item.getId(), LocalDateTime.now());
@@ -164,7 +164,7 @@ public class BookingServiceImpl implements BookingService {
 
     private Booking getBookingById(long bookingId) {
         return bookingRepository.findById(bookingId).orElseThrow(
-                () -> new NotFoundException("Бронирования с id = " + bookingId + " не существует!")
+                () -> new NotFoundException("Бронирования с bookingId=" + bookingId + " не существует!")
         );
     }
 }

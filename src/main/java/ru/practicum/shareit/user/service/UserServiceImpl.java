@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.common.exception.NotFoundException;
@@ -9,6 +10,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -17,28 +19,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers() {
+        log.debug("Получение списка всех пользователей");
         return userRepository.findAll();
     }
 
     @Override
     public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("Пользователя с id = " + userId + " не существует!")
-        );
+        log.debug("Получение пользователя с userId={}", userId);
+        return getUserByUserId(userId);
     }
 
     @Override
     @Transactional
     public User addUser(User user) {
+        log.debug("Добавление пользователя {}", user);
         return userRepository.save(user);
     }
 
     @Override
     @Transactional
     public User updateUser(User user, Long userId) {
-        User userNew = userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("Пользователя с id = " + userId + " не существует!")
-        );
+        log.debug("Добавление пользователя {} с userId={}", user, userId);
+        User userNew = getUserByUserId(userId);
         if (user.getEmail() != null) {
             userNew.setEmail(user.getEmail());
         }
@@ -51,17 +53,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(long userId) {
+        log.debug("Удаление пользователя с userId={}", userId);
         userRepository.deleteById(userId);
     }
 
     @Override
     public void checkUser(long userId) {
-        if (!isUserExist(userId)) {
-            throw new NotFoundException("Пользователь с id " + userId + " не существует!");
-        }
+        log.debug("Проверка существования пользователя с userId={}", userId);
+        getUserByUserId(userId);
     }
 
-    private boolean isUserExist(long userId) {
-        return userRepository.findById(userId).isPresent();
+    private User getUserByUserId(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("Пользователя с userId=" + userId + " не существует!")
+        );
     }
 }

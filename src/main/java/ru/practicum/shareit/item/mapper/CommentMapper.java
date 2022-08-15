@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item.mapper;
 
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.model.dto.CommentDto;
+import ru.practicum.shareit.item.model.entity.Comment;
 
 import java.util.List;
 import java.util.stream.Collectors;

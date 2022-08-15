@@ -1,11 +1,11 @@
-package ru.practicum.shareit.requests.model;
+package ru.practicum.shareit.requests.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.entity.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;

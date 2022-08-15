@@ -1,8 +1,8 @@
 package ru.practicum.shareit.booking.service;
 
 import ru.practicum.shareit.booking.State;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.booking.model.entity.Booking;
+import ru.practicum.shareit.item.model.entity.Item;
 
 import java.util.List;
 

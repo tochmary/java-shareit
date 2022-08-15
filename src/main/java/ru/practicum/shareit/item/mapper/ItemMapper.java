@@ -1,11 +1,11 @@
 package ru.practicum.shareit.item.mapper;
 
 import ru.practicum.shareit.booking.mapper.BookingMapper;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemFullDto;
-import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.booking.model.entity.Booking;
+import ru.practicum.shareit.item.model.dto.ItemDto;
+import ru.practicum.shareit.item.model.dto.ItemFullDto;
+import ru.practicum.shareit.item.model.entity.Comment;
+import ru.practicum.shareit.item.model.entity.Item;
 
 import java.util.Comparator;
 import java.util.List;
@@ -33,15 +33,15 @@ public class ItemMapper {
                                             Booking lastBooking,
                                             Booking nextBooking,
                                             List<Comment> comments) {
-        return new ItemFullDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                lastBooking == null ? null : BookingMapper.toBookingDto(lastBooking),
-                nextBooking == null ? null : BookingMapper.toBookingDto(nextBooking),
-                comments == null ? null : CommentMapper.toCommentDtoList(comments)
-        );
+        ItemFullDto itemFullDto = new ItemFullDto();
+        itemFullDto.setId(item.getId());
+        itemFullDto.setName(item.getName());
+        itemFullDto.setDescription(item.getDescription());
+        itemFullDto.setAvailable(item.getAvailable());
+        itemFullDto.setLastBooking(lastBooking == null ? null : BookingMapper.toBookingDto(lastBooking));
+        itemFullDto.setNextBooking(nextBooking == null ? null : BookingMapper.toBookingDto(nextBooking));
+        itemFullDto.setComments(comments == null ? null : CommentMapper.toCommentDtoList(comments));
+        return itemFullDto;
     }
 
     public static Item toItem(ItemDto itemDto) {

@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.booking.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import ru.practicum.shareit.booking.Status;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.model.entity.Item;
+import ru.practicum.shareit.user.model.entity.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

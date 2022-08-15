@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user.mapper;
 
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.dto.UserDto;
+import ru.practicum.shareit.user.model.entity.User;
 
 import java.util.Comparator;
 import java.util.List;

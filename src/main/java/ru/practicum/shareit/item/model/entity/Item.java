@@ -1,12 +1,12 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import ru.practicum.shareit.requests.model.ItemRequest;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.requests.model.entity.ItemRequest;
+import ru.practicum.shareit.user.model.entity.User;
 
 import javax.persistence.*;
 

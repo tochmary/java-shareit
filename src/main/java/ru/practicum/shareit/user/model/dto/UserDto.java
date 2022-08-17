@@ -1,7 +1,10 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.user.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 /**
  * id — уникальный идентификатор пользователя;
@@ -11,8 +14,10 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class User {
+public class UserDto {
     private Long id;
     private String name;
+    @Email
+    @NotBlank
     private String email;
 }

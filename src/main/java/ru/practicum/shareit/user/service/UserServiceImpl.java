@@ -1,63 +1,71 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.common.exception.NotFoundException;
-import ru.practicum.shareit.common.exception.ValidationException;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.entity.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
     public List<User> getUsers() {
-        return userRepository.getUsers();
+        log.debug("Получение списка всех пользователей");
+        return userRepository.findAll();
     }
 
     @Override
     public User getUserById(Long userId) {
-        return userRepository.getUserById(userId).orElseThrow(
-                () -> new NotFoundException("Пользователя с id = " + userId + " не существует!")
-        );
+        log.debug("Получение пользователя с userId={}", userId);
+        return getUserByUserId(userId);
     }
 
     @Override
+    @Transactional
     public User addUser(User user) {
-        checkEmail(user);
-        return userRepository.addUser(user);
+        log.debug("Добавление пользователя {}", user);
+        return userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public User updateUser(User user, Long userId) {
-        user.setId(userId);
-        checkEmail(user);
-        return userRepository.updateUser(user);
+        log.debug("Добавление пользователя {} с userId={}", user, userId);
+        User userNew = getUserByUserId(userId);
+        if (user.getEmail() != null) {
+            userNew.setEmail(user.getEmail());
+        }
+        if (user.getName() != null) {
+            userNew.setName(user.getName());
+        }
+        return userRepository.save(userNew);
     }
 
     @Override
+    @Transactional
     public void deleteUser(long userId) {
-        userRepository.deleteUser(userId);
+        log.debug("Удаление пользователя с userId={}", userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
     public void checkUser(long userId) {
-        if (!isUserExist(userId)) {
-            throw new NotFoundException("Пользователь с id " + userId + " не существует!");
-        }
+        log.debug("Проверка существования пользователя с userId={}", userId);
+        getUserByUserId(userId);
     }
 
-    private void checkEmail(User user) {
-        if (userRepository.isExistEmail(user)) {
-            throw new ValidationException("Данный email уже существует для другого пользователя!");
-        }
-    }
-
-    private boolean isUserExist(long userId) {
-        return userRepository.getUserById(userId).isPresent();
+    private User getUserByUserId(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("Пользователя с userId=" + userId + " не существует!")
+        );
     }
 }

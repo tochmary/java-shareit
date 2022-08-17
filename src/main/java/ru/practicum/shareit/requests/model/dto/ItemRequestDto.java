@@ -1,7 +1,7 @@
-package ru.practicum.shareit.requests.dto;
+package ru.practicum.shareit.requests.model.dto;
 
 import lombok.Data;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.entity.User;
 
 import java.time.LocalDate;
 

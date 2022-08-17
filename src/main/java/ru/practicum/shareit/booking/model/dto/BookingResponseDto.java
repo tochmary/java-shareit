@@ -1,11 +1,16 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.booking.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.booking.Status;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.model.dto.ItemDto;
+import ru.practicum.shareit.user.model.dto.UserDto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * id — уникальный идентификатор бронирования;
@@ -21,11 +26,17 @@ import java.time.LocalDate;
  * CANCELED — бронирование отменено создателем.
  */
 @Data
-public class Booking {
+@AllArgsConstructor
+@NoArgsConstructor
+public class BookingResponseDto {
     private Long id;
-    private LocalDate start;
-    private LocalDate end;
-    private Item item;
-    private User booker;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime start;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime end;
+    private ItemDto item;
+    private UserDto booker;
     private Status status;
 }

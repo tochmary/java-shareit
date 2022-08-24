@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.model.entity.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * id — уникальный идентификатор запроса;
@@ -35,5 +36,5 @@ public class ItemRequest {
     private User requestor;
 
     @Column
-    private LocalDate created;
+    private LocalDateTime created = LocalDateTime.now();
 }

@@ -51,7 +51,7 @@ public class ItemController {
                            @Valid @RequestBody ItemDto itemDto) {
         log.info("Добавление вещи {} пользователем с userId={}", itemDto, userId);
         Item item = ItemMapper.toItem(itemDto);
-        item = itemService.addItem(userId, item);
+        item = itemService.addItem(userId, item, itemDto.getRequestId());
         return ItemMapper.toItemDto(item);
     }
 
@@ -61,7 +61,7 @@ public class ItemController {
                               @RequestBody ItemDto itemDto) {
         log.info("Обновление вещи {} с itemId={} пользователем с userId={}", itemDto, itemId, userId);
         Item item = ItemMapper.toItem(itemDto);
-        item = itemService.updateItem(userId, itemId, item);
+        item = itemService.updateItem(userId, itemId, item, itemDto.getRequestId());
         return ItemMapper.toItemDto(item);
     }
 

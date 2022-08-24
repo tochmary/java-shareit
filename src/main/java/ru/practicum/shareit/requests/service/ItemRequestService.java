@@ -12,4 +12,6 @@ public interface ItemRequestService {
     List<ItemRequest> getItemRequestsAll(long userId, Integer from, Integer size);
 
     ItemRequest getItemRequest(long userId, long requestId);
+
+    void checkItemRequest(long requestId);
 }

@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.common.exception.NotFoundException;
-import ru.practicum.shareit.item.model.entity.Item;
 import ru.practicum.shareit.requests.model.entity.ItemRequest;
 import ru.practicum.shareit.requests.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.service.UserService;
@@ -39,9 +38,9 @@ public class ItemRequestServiceImpl implements ItemRequestService{
 
     @Override
     public List<ItemRequest> getItemRequestsAll(long userId, Integer from, Integer size) {
-        log.debug("Получение списка всех запросов для userId={}. Со страницы {} в количестве {}", userId, from, size);
+        log.debug("Получение списка всех не своих запросов для userId={}. Со страницы {} в количестве {}", userId, from, size);
         userService.checkUser(userId);
-        return itemRequestRepository.findAll(PageRequest.of(from,size)).toList();
+        return itemRequestRepository.findAllByRequestorIdNot(userId, PageRequest.of(from,size)).toList();
     }
 
     @Override
@@ -49,6 +48,12 @@ public class ItemRequestServiceImpl implements ItemRequestService{
         log.debug("Получение запроса requestId={} для userId={}", requestId, userId);
         userService.checkUser(userId);
         return findItemRequestById(requestId);
+    }
+
+    @Override
+    public void checkItemRequest(long requestId) {
+        log.debug("Проверка существования запроса с requestId={}", requestId);
+        findItemRequestById(requestId);
     }
 
     private ItemRequest findItemRequestById(long requestId) {

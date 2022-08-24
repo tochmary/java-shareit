@@ -11,6 +11,7 @@ import ru.practicum.shareit.item.model.entity.Comment;
 import ru.practicum.shareit.item.model.entity.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.requests.service.ItemRequestService;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
+    private final ItemRequestService itemRequestService;
 
     @Override
     public List<Item> getItemsByUserId(long userId) {
@@ -41,16 +43,20 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item addItem(long userId, Item item) {
-        log.debug("Добавление вещи {} пользователем с userId={}", item, userId);
+    public Item addItem(long userId, Item item, Long requestId) {
+        log.debug("Добавление вещи {} пользователем с userId={}, requestId={}", item, userId, requestId);
         userService.checkUser(userId);
         item.setOwner(userService.getUserById(userId));
+        if (requestId != null) {
+            itemRequestService.checkItemRequest(requestId);
+            item.setRequest(itemRequestService.getItemRequest(userId, requestId));
+        }
         return itemRepository.save(item);
     }
 
     @Override
     @Transactional
-    public Item updateItem(long userId, long itemId, Item item) {
+    public Item updateItem(long userId, long itemId, Item item, Long requestId) {
         log.debug("Обновление вещи {} с itemId={} пользователем с userId={}", item, itemId, userId);
         userService.checkUser(userId);
         if (isExistItemIdForUserId(userId, itemId)) {
@@ -65,6 +71,10 @@ public class ItemServiceImpl implements ItemService {
         }
         if (item.getDescription() != null) {
             itemNew.setDescription(item.getDescription());
+        }
+        if (requestId != null) {
+            itemRequestService.checkItemRequest(requestId);
+            itemNew.setRequest(itemRequestService.getItemRequest(userId, requestId));
         }
         return itemRepository.save(itemNew);
     }
@@ -93,6 +103,12 @@ public class ItemServiceImpl implements ItemService {
     public List<Comment> getCommentsByItemId(long itemId) {
         log.debug("Получения отзывов о вещи с itemId={}", itemId);
         return commentRepository.findAllByItemIdOrderByCreatedDesc(itemId);
+    }
+
+    @Override
+    public List<Item> getItemsByRequestId(long requestId) {
+        log.debug("Получения вещей по запросу requestId={}", requestId);
+        return itemRepository.findItemsByRequestId(requestId);
     }
 
     private boolean isExistItemIdForUserId(long userId, long itemId) {

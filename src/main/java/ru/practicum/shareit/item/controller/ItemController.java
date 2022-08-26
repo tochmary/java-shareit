@@ -5,11 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.model.entity.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.common.Validation;
+import ru.practicum.shareit.item.mapper.CommentMapper;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.dto.CommentDto;
 import ru.practicum.shareit.item.model.dto.ItemDto;
 import ru.practicum.shareit.item.model.dto.ItemFullDto;
-import ru.practicum.shareit.item.mapper.CommentMapper;
-import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.entity.Comment;
 import ru.practicum.shareit.item.model.entity.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -29,9 +30,14 @@ public class ItemController {
     private final BookingService bookingService;
 
     @GetMapping
-    public List<ItemFullDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemFullDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId,
+                                      @RequestParam(defaultValue = "0") Integer from,
+                                      @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка вещей владельца с userId={}", userId);
-        List<Item> itemList = itemService.getItemsByUserId(userId);
+        log.info("from={}, size={}", from, size);
+        Validation.checkRequestParam("from", from);
+        Validation.checkRequestParam("size", size);
+        List<Item> itemList = itemService.getItemsByUserId(userId, from, size);
         return itemList.stream()
                 .map(item -> getItemWithBookDto(bookingService, userId, item))
                 .sorted(Comparator.comparing(ItemFullDto::getId))
@@ -67,12 +73,17 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> getItemsByText(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                        @RequestParam String text) {
+                                        @RequestParam String text,
+                                        @RequestParam(defaultValue = "0") Integer from,
+                                        @RequestParam(defaultValue = "20") Integer size) {
         log.info("Поиск вещей с текстом={} пользователем с userId={}", text, userId);
+        log.info("from={}, size={}", from, size);
+        Validation.checkRequestParam("from", from);
+        Validation.checkRequestParam("size", size);
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        List<Item> itemList = itemService.getItemsByText(userId, text);
+        List<Item> itemList = itemService.getItemsByText(userId, text, from, size);
         return ItemMapper.toItemDtoList(itemList);
     }
 

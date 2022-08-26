@@ -1,6 +1,5 @@
 package ru.practicum.shareit.requests.mapper;
 
-import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.entity.Item;
 import ru.practicum.shareit.requests.model.dto.ItemRequestDto;

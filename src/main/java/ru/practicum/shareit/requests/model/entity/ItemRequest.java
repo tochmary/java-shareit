@@ -8,7 +8,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import ru.practicum.shareit.user.model.entity.User;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**

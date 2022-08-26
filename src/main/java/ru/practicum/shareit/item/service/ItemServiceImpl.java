@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -32,6 +33,14 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getItemsByUserId(long userId) {
         log.debug("Получение списка вещей владельца с userId={}", userId);
         return itemRepository.findItemsByOwnerId(userId);
+    }
+
+    @Override
+    public List<Item> getItemsByUserId(long userId, Integer from, Integer size) {
+        log.debug("Получение списка вещей владельца с userId={}", userId);
+        log.info("from={}, size={}", from, size);
+        PageRequest pr = PageRequest.of(from / size, size);
+        return itemRepository.findItemsByOwnerId(userId, pr).toList();
     }
 
     @Override
@@ -80,10 +89,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemsByText(long userId, String text) {
+    public List<Item> getItemsByText(long userId, String text, Integer from, Integer size) {
         log.debug("Поиск вещей с текстом={} в названии и описании пользователем с userId={}", text, userId);
+        log.info("from={}, size={}", from, size);
+        PageRequest pr = PageRequest.of(from / size, size);
         userService.checkUser(userId);
-        return itemRepository.getItemsByText(text);
+        return itemRepository.getItemsByText(text, pr).toList();
     }
 
     @Override

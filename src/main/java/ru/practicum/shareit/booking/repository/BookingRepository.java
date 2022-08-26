@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.model.entity.Booking;
@@ -8,29 +10,32 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    List<Booking> findAllByBookerIdOrderByStartDesc(long bookerId);
 
-    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(long bookerId, Status status);
+    Page<Booking> findAllByBookerIdOrderByStartDesc(long bookerId, Pageable pageable);
 
-    List<Booking> findAllByBookerIdAndEndBeforeOrderByStartDesc(long bookerId, LocalDateTime endDate);
+    Page<Booking> findAllByBookerIdAndStatusOrderByStartDesc(long bookerId, Status status, Pageable pageable);
 
-    List<Booking> findAllByBookerIdAndStartAfterOrderByStartDesc(long bookerId, LocalDateTime startDate);
+    Page<Booking> findAllByBookerIdAndEndBeforeOrderByStartDesc(long bookerId, LocalDateTime endDate, Pageable pageable);
 
-    List<Booking> findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(long bookerId,
+    Page<Booking> findAllByBookerIdAndStartAfterOrderByStartDesc(long bookerId, LocalDateTime startDate, Pageable pageable);
+
+    Page<Booking> findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(long bookerId,
                                                                              LocalDateTime startDate,
-                                                                             LocalDateTime endDate);
+                                                                             LocalDateTime endDate,
+                                                                             Pageable pageable);
 
-    List<Booking> findAllByItemIdOrderByStartDesc(long itemId);
+    Page<Booking> findAllByItemIdOrderByStartDesc(long itemId, Pageable pageable);
 
-    List<Booking> findAllByItemIdAndStatusOrderByStartDesc(long itemId, Status status);
+    Page<Booking> findAllByItemIdAndStatusOrderByStartDesc(long itemId, Status status, Pageable pageable);
 
-    List<Booking> findAllByItemIdAndEndBeforeOrderByStartDesc(long itemId, LocalDateTime endDate);
+    Page<Booking> findAllByItemIdAndEndBeforeOrderByStartDesc(long itemId, LocalDateTime endDate, Pageable pageable);
 
-    List<Booking> findAllByItemIdAndStartAfterOrderByStartDesc(long itemId, LocalDateTime startDate);
+    Page<Booking> findAllByItemIdAndStartAfterOrderByStartDesc(long itemId, LocalDateTime startDate, Pageable pageable);
 
-    List<Booking> findAllByItemIdAndStartBeforeAndEndAfterOrderByStartDesc(long itemId,
+    Page<Booking> findAllByItemIdAndStartBeforeAndEndAfterOrderByStartDesc(long itemId,
                                                                            LocalDateTime startDate,
-                                                                           LocalDateTime endDate);
+                                                                           LocalDateTime endDate,
+                                                                           Pageable pageable);
 
     Booking findFirstByItemIdAndEndBeforeOrderByEndDesc(long itemId, LocalDateTime endDate);
 

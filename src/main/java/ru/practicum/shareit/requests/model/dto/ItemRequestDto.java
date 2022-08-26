@@ -5,10 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.model.dto.ItemDto;
 import ru.practicum.shareit.user.model.dto.UserDto;
-import ru.practicum.shareit.user.model.entity.User;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

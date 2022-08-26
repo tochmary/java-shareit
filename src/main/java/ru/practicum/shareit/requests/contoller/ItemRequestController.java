@@ -3,7 +3,7 @@ package ru.practicum.shareit.requests.contoller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.model.dto.ItemFullDto;
+import ru.practicum.shareit.common.Validation;
 import ru.practicum.shareit.item.model.entity.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.requests.mapper.ItemRequestMapper;
@@ -72,6 +72,8 @@ public class ItemRequestController {
                                                    @RequestParam(defaultValue = "0") Integer from,
                                                    @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка запросов, созданных другими пользователями для userId={}, from={}, size={}", userId, from, size);
+        Validation.checkRequestParam("from", from);
+        Validation.checkRequestParam("size", size);
         List<ItemRequest> ItemRequestList = itemRequestService.getItemRequestsAll(userId, from, size);
         return ItemRequestList.stream()
                 .map(itemRequest -> {

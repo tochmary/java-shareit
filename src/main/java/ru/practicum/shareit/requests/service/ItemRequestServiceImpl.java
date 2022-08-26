@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ItemRequestServiceImpl implements ItemRequestService{
+public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final UserService userService;
 
@@ -40,7 +40,9 @@ public class ItemRequestServiceImpl implements ItemRequestService{
     public List<ItemRequest> getItemRequestsAll(long userId, Integer from, Integer size) {
         log.debug("Получение списка всех не своих запросов для userId={}. Со страницы {} в количестве {}", userId, from, size);
         userService.checkUser(userId);
-        return itemRequestRepository.findAllByRequestorIdNot(userId, PageRequest.of(from,size)).toList();
+        log.info("from={}, size={}", from, size);
+        PageRequest pr = PageRequest.of(from / size, size);
+        return itemRequestRepository.findAllByRequestorIdNot(userId, pr).toList();
     }
 
     @Override

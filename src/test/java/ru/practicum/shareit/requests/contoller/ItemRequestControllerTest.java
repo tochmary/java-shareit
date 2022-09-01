@@ -66,7 +66,6 @@ class ItemRequestControllerTest {
                 .andExpect(jsonPath("$.id", is(itemRequest1.getId()), Long.class))
                 .andExpect(jsonPath("$.description", is(itemRequest1.getDescription())))
                 .andExpect(jsonPath("$.requestor.id", is(itemRequest1.getRequestor().getId()), Long.class))
-                .andExpect(jsonPath("$.created", is(itemRequest1.getCreated().toString())))
                 .andExpect(jsonPath("$.items", is(nullValue())));
     }
 
@@ -90,12 +89,10 @@ class ItemRequestControllerTest {
                 .andExpect(jsonPath("$[0].id", is(itemRequest1.getId()), Long.class))
                 .andExpect(jsonPath("$[0].description", is(itemRequest1.getDescription())))
                 .andExpect(jsonPath("$[0].requestor.id", is(itemRequest1.getRequestor().getId()), Long.class))
-                .andExpect(jsonPath("$[0].created", is(itemRequest1.getCreated().toString())))
                 .andExpect(jsonPath("$[0].items", is(nullValue())))
                 .andExpect(jsonPath("$[1].id", is(itemRequest2.getId()), Long.class))
                 .andExpect(jsonPath("$[1].description", is(itemRequest2.getDescription())))
                 .andExpect(jsonPath("$[1].requestor.id", is(itemRequest2.getRequestor().getId()), Long.class))
-                .andExpect(jsonPath("$[1].created", is(itemRequest2.getCreated().toString())))
                 .andExpect(jsonPath("$[1].items[0].id", is(item1.getId()), Long.class));
 
     }
@@ -161,7 +158,6 @@ class ItemRequestControllerTest {
                 .andExpect(jsonPath("$.id", is(itemRequest2.getId()), Long.class))
                 .andExpect(jsonPath("$.description", is(itemRequest2.getDescription())))
                 .andExpect(jsonPath("$.requestor.id", is(itemRequest2.getRequestor().getId()), Long.class))
-                .andExpect(jsonPath("$.created", is(itemRequest2.getCreated().toString())))
                 .andExpect(jsonPath("$.items[0].id", is(item1.getId()), Long.class));
     }
 }

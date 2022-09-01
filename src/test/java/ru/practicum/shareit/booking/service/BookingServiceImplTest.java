@@ -39,15 +39,15 @@ class BookingServiceImplTest {
 
     BookingServiceImpl bookingServiceImpl;
 
-    private final static User USER_1 = new User(1L, "Maria", "maria_smart@mail.ru");
-    private final static User USER_2 = new User(2L, "Ivan", "ivan_humble@mail.ru");
+    private static final User USER_1 = new User(1L, "Maria", "maria_smart@mail.ru");
+    private static final User USER_2 = new User(2L, "Ivan", "ivan_humble@mail.ru");
 
-    private final static Item ITEM_1 = new Item(1L, "Магнит", "сувенир", true, USER_1, null);
-    private final static Item ITEM_2 = new Item(2L, "Открытка", "сувенир", true, USER_1, null);
+    private static final Item ITEM_1 = new Item(1L, "Магнит", "сувенир", true, USER_1, null);
+    private static final Item ITEM_2 = new Item(2L, "Открытка", "сувенир", true, USER_1, null);
 
-    private final static Booking BOOKING_1 = new Booking(1L,
+    private static final Booking BOOKING_1 = new Booking(1L,
             LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2), ITEM_1, USER_2, Status.WAITING);
-    private final static Booking BOOKING_2 = new Booking(2L,
+    private static final Booking BOOKING_2 = new Booking(2L,
             LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2), ITEM_2, USER_2, Status.WAITING);
 
     @BeforeEach

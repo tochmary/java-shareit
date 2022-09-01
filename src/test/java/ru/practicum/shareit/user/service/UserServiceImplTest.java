@@ -26,8 +26,8 @@ class UserServiceImplTest {
 
     UserServiceImpl userServiceImpl;
 
-    private final static User USER_1 = new User(1L, "Maria", "maria_smart@mail.ru");
-    private final static User USER_2 = new User(2L, "Ivan", "ivan_humble@mail.ru");
+    private static final User USER_1 = new User(1L, "Maria", "maria_smart@mail.ru");
+    private static final User USER_2 = new User(2L, "Ivan", "ivan_humble@mail.ru");
 
     @BeforeEach
     void setUp() {

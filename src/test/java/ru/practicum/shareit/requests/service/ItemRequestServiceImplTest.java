@@ -34,11 +34,11 @@ class ItemRequestServiceImplTest {
 
     ItemRequestServiceImpl itemRequestService;
 
-    private final static User USER_1 = new User(1L, "Maria", "maria_smart@mail.ru");
-    private final static User USER_2 = new User(2L, "Ivan", "ivan_humble@mail.ru");
+    private static final User USER_1 = new User(1L, "Maria", "maria_smart@mail.ru");
+    private static final User USER_2 = new User(2L, "Ivan", "ivan_humble@mail.ru");
 
-    private final static ItemRequest ITEM_REQUEST_1 = new ItemRequest(1L, "ищу дом", USER_1, LocalDateTime.now());
-    private final static ItemRequest ITEM_REQUEST_2 = new ItemRequest(2L, "ищу сувенир", USER_1, LocalDateTime.now().plusSeconds(30));
+    private static final ItemRequest ITEM_REQUEST_1 = new ItemRequest(1L, "ищу дом", USER_1, LocalDateTime.now());
+    private static final ItemRequest ITEM_REQUEST_2 = new ItemRequest(2L, "ищу сувенир", USER_1, LocalDateTime.now().plusSeconds(30));
 
     @BeforeEach
     void setUp() {

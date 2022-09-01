@@ -57,8 +57,8 @@ public class ItemRequestController {
     @GetMapping
     public List<ItemRequestDto> getItemRequests(@RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("Получение списка запросов вместе с данными об ответах на них для владельца с userId={}", userId);
-        List<ItemRequest> ItemRequestList = itemRequestService.getItemRequestsByUserId(userId);
-        return ItemRequestList.stream()
+        List<ItemRequest> itemRequestList = itemRequestService.getItemRequestsByUserId(userId);
+        return itemRequestList.stream()
                 .map(itemRequest -> {
                     List<Item> items = itemService.getItemsByRequestId(itemRequest.getId());
                     return ItemRequestMapper.toItemRequestDto(itemRequest, items);
@@ -74,8 +74,8 @@ public class ItemRequestController {
         log.info("Получение списка запросов, созданных другими пользователями для userId={}, from={}, size={}", userId, from, size);
         Validation.checkRequestParam("from", from);
         Validation.checkRequestParam("size", size);
-        List<ItemRequest> ItemRequestList = itemRequestService.getItemRequestsAll(userId, from, size);
-        return ItemRequestList.stream()
+        List<ItemRequest> itemRequestList = itemRequestService.getItemRequestsAll(userId, from, size);
+        return itemRequestList.stream()
                 .map(itemRequest -> {
                     List<Item> items = itemService.getItemsByRequestId(itemRequest.getId());
                     return ItemRequestMapper.toItemRequestDto(itemRequest, items);
@@ -90,7 +90,7 @@ public class ItemRequestController {
         log.info("Получение о запросе requestId={} вместе с данными об ответах для userId={}",
                 requestId, userId);
         List<Item> items = itemService.getItemsByRequestId(requestId);
-        ItemRequest ItemRequest = itemRequestService.getItemRequest(userId, requestId);
-        return ItemRequestMapper.toItemRequestDto(ItemRequest, items);
+        ItemRequest itemRequest = itemRequestService.getItemRequest(userId, requestId);
+        return ItemRequestMapper.toItemRequestDto(itemRequest, items);
     }
 }

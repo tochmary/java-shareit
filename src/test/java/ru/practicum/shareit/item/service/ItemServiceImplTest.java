@@ -44,16 +44,16 @@ class ItemServiceImplTest {
 
     ItemServiceImpl itemServiceImpl;
 
-    private final static User USER_1 = new User(1L, "Maria", "maria_smart@mail.ru");
-    private final static User USER_2 = new User(2L, "Ivan", "ivan_humble@mail.ru");
+    private static final User USER_1 = new User(1L, "Maria", "maria_smart@mail.ru");
+    private static final User USER_2 = new User(2L, "Ivan", "ivan_humble@mail.ru");
 
-    private final static ItemRequest ITEM_REQUEST_1 = new ItemRequest(1L, "ищу сувенир", USER_2, LocalDateTime.now().plusSeconds(30));
-    private final static ItemRequest ITEM_REQUEST_2 = new ItemRequest(2L, "ищу сувенир1", USER_2, LocalDateTime.now().plusSeconds(40));
+    private static final ItemRequest ITEM_REQUEST_1 = new ItemRequest(1L, "ищу сувенир", USER_2, LocalDateTime.now().plusSeconds(30));
+    private static final ItemRequest ITEM_REQUEST_2 = new ItemRequest(2L, "ищу сувенир1", USER_2, LocalDateTime.now().plusSeconds(40));
 
-    private final static Item ITEM_1 = new Item(1L, "Магнит", "сувенир1", true, USER_1, null);
-    private final static Item ITEM_2 = new Item(2L, "Открытка", "сувенир2", true, USER_1, ITEM_REQUEST_1);
+    private static final Item ITEM_1 = new Item(1L, "Магнит", "сувенир1", true, USER_1, null);
+    private static final Item ITEM_2 = new Item(2L, "Открытка", "сувенир2", true, USER_1, ITEM_REQUEST_1);
 
-    private final static Comment COMMENT_1 = new Comment(1L, "комментарий1", ITEM_1, USER_2, LocalDateTime.now());
+    private static final Comment COMMENT_1 = new Comment(1L, "комментарий1", ITEM_1, USER_2, LocalDateTime.now());
 
 
     @BeforeEach

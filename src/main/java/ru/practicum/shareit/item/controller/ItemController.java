@@ -39,7 +39,7 @@ public class ItemController {
         Validation.checkRequestParam("size", size);
         List<Item> itemList = itemService.getItemsByUserId(userId, from, size);
         return itemList.stream()
-                .map(item -> getItemWithBookDto(bookingService, userId, item))
+                .map(item -> getItemWithBookDto(userId, item))
                 .sorted(Comparator.comparing(ItemFullDto::getId))
                 .collect(Collectors.toList());
     }
@@ -49,7 +49,7 @@ public class ItemController {
                                    @PathVariable long itemId) {
         log.info("Просмотр вещи с itemId={} пользователем с userId={}", itemId, userId);
         Item item = itemService.getItemId(userId, itemId);
-        return getItemWithBookDto(bookingService, userId, item);
+        return getItemWithBookDto(userId, item);
     }
 
     @PostMapping
@@ -97,7 +97,7 @@ public class ItemController {
         return CommentMapper.toCommentDto(comment);
     }
 
-    private ItemFullDto getItemWithBookDto(BookingService bookingService, long userId, Item item) {
+    private ItemFullDto getItemWithBookDto(long userId, Item item) {
         Booking lastBooking = bookingService.getLastBookingByItemId(userId, item);
         Booking nextBooking = bookingService.getNextBookingByItemId(userId, item);
         List<Comment> comments = itemService.getCommentsByItemId(item.getId());

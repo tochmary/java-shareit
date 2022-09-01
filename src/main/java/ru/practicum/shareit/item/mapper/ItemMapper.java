@@ -6,6 +6,7 @@ import ru.practicum.shareit.item.model.dto.ItemDto;
 import ru.practicum.shareit.item.model.dto.ItemFullDto;
 import ru.practicum.shareit.item.model.entity.Comment;
 import ru.practicum.shareit.item.model.entity.Item;
+import ru.practicum.shareit.requests.model.entity.ItemRequest;
 
 import java.util.Comparator;
 import java.util.List;
@@ -14,12 +15,16 @@ import java.util.stream.Collectors;
 public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable()
-        );
+        ItemDto itemDto = new ItemDto();
+        itemDto.setId(item.getId());
+        itemDto.setName(item.getName());
+        itemDto.setDescription(item.getDescription());
+        itemDto.setAvailable(item.getAvailable());
+        ItemRequest itemRequest = item.getRequest();
+        if (itemRequest != null) {
+            itemDto.setRequestId(item.getRequest().getId());
+        }
+        return itemDto;
     }
 
     public static List<ItemDto> toItemDtoList(List<Item> itemList) {

@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUser(User user, Long userId) {
-        log.debug("Добавление пользователя {} с userId={}", user, userId);
+        log.debug("Обновление пользователя {} с userId={}", user, userId);
         User userNew = getUserByUserId(userId);
         if (user.getEmail() != null) {
             userNew.setEmail(user.getEmail());
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         getUserByUserId(userId);
     }
 
-    private User getUserByUserId(Long userId) {
+    User getUserByUserId(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("Пользователя с userId=" + userId + " не существует!")
         );

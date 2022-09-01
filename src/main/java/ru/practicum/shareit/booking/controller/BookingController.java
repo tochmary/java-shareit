@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.State;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.dto.BookingResponseDto;
-import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.entity.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.common.Validation;
 import ru.practicum.shareit.common.exception.BadRequestException;
 
 import javax.validation.Valid;
@@ -31,17 +32,28 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingResponseDto> getBookingsByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                         @RequestParam(defaultValue = "ALL") String state) {
+                                                         @RequestParam(defaultValue = "ALL") String state,
+                                                         @RequestParam(defaultValue = "0") Integer from,
+                                                         @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка бронирований для всех вещей пользователя c userId={} со статусом {}", userId, state);
-        List<Booking> bookingList = bookingService.getBookingsByOwnerId(userId, toState(state));
+        log.info("from={}, size={}", from, size);
+        Validation.checkRequestParam("from", from);
+        Validation.checkRequestParam("size", size);
+        List<Booking> bookingList = bookingService.getBookingsByOwnerId(userId, toState(state), from, size);
         return BookingMapper.toBookingDtoList(bookingList);
     }
 
+
     @GetMapping
     public List<BookingResponseDto> getBookingsByBookerId(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                          @RequestParam(defaultValue = "ALL") String state) {
+                                                          @RequestParam(defaultValue = "ALL") String state,
+                                                          @RequestParam(defaultValue = "0") Integer from,
+                                                          @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка всех бронирований пользователя c userId={} со статусом {}", userId, state);
-        List<Booking> bookingList = bookingService.getBookingsByBookerId(userId, toState(state));
+        log.info("from={}, size={}", from, size);
+        Validation.checkRequestParam("from", from);
+        Validation.checkRequestParam("size", size);
+        List<Booking> bookingList = bookingService.getBookingsByBookerId(userId, toState(state), from, size);
         return BookingMapper.toBookingDtoList(bookingList);
     }
 

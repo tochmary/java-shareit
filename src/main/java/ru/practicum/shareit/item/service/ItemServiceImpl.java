@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -11,6 +12,7 @@ import ru.practicum.shareit.item.model.entity.Comment;
 import ru.practicum.shareit.item.model.entity.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.requests.service.ItemRequestService;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -25,11 +27,20 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
+    private final ItemRequestService itemRequestService;
 
     @Override
     public List<Item> getItemsByUserId(long userId) {
         log.debug("Получение списка вещей владельца с userId={}", userId);
         return itemRepository.findItemsByOwnerId(userId);
+    }
+
+    @Override
+    public List<Item> getItemsByUserId(long userId, Integer from, Integer size) {
+        log.debug("Получение списка вещей владельца с userId={}", userId);
+        log.info("from={}, size={}", from, size);
+        PageRequest pr = PageRequest.of(from / size, size);
+        return itemRepository.findItemsByOwnerId(userId, pr).toList();
     }
 
     @Override
@@ -41,16 +52,20 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item addItem(long userId, Item item) {
-        log.debug("Добавление вещи {} пользователем с userId={}", item, userId);
+    public Item addItem(long userId, Item item, Long requestId) {
+        log.debug("Добавление вещи {} пользователем с userId={}, requestId={}", item, userId, requestId);
         userService.checkUser(userId);
         item.setOwner(userService.getUserById(userId));
+        if (requestId != null) {
+            itemRequestService.checkItemRequest(requestId);
+            item.setRequest(itemRequestService.getItemRequest(userId, requestId));
+        }
         return itemRepository.save(item);
     }
 
     @Override
     @Transactional
-    public Item updateItem(long userId, long itemId, Item item) {
+    public Item updateItem(long userId, long itemId, Item item, Long requestId) {
         log.debug("Обновление вещи {} с itemId={} пользователем с userId={}", item, itemId, userId);
         userService.checkUser(userId);
         if (isExistItemIdForUserId(userId, itemId)) {
@@ -66,14 +81,20 @@ public class ItemServiceImpl implements ItemService {
         if (item.getDescription() != null) {
             itemNew.setDescription(item.getDescription());
         }
+        if (requestId != null) {
+            itemRequestService.checkItemRequest(requestId);
+            itemNew.setRequest(itemRequestService.getItemRequest(userId, requestId));
+        }
         return itemRepository.save(itemNew);
     }
 
     @Override
-    public List<Item> getItemsByText(long userId, String text) {
+    public List<Item> getItemsByText(long userId, String text, Integer from, Integer size) {
         log.debug("Поиск вещей с текстом={} в названии и описании пользователем с userId={}", text, userId);
+        log.info("from={}, size={}", from, size);
+        PageRequest pr = PageRequest.of(from / size, size);
         userService.checkUser(userId);
-        return itemRepository.getItemsByText(text);
+        return itemRepository.getItemsByText(text, pr).toList();
     }
 
     @Override
@@ -93,6 +114,12 @@ public class ItemServiceImpl implements ItemService {
     public List<Comment> getCommentsByItemId(long itemId) {
         log.debug("Получения отзывов о вещи с itemId={}", itemId);
         return commentRepository.findAllByItemIdOrderByCreatedDesc(itemId);
+    }
+
+    @Override
+    public List<Item> getItemsByRequestId(long requestId) {
+        log.debug("Получения вещей по запросу requestId={}", requestId);
+        return itemRepository.findItemsByRequestId(requestId);
     }
 
     private boolean isExistItemIdForUserId(long userId, long itemId) {

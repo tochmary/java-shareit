@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareitserver.booking.State;
+import ru.practicum.shareitserver.booking.BookingState;
 import ru.practicum.shareitserver.booking.Status;
 import ru.practicum.shareitserver.booking.model.entity.Booking;
 import ru.practicum.shareitserver.booking.repository.BookingRepository;
@@ -86,7 +86,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getBookingsByBookerId(long userId, State state, Integer from, Integer size) {
+    public List<Booking> getBookingsByBookerId(long userId, BookingState state, Integer from, Integer size) {
         log.debug("Получение бронирования для userId={} со state={}", userId, state);
         userService.checkUser(userId);
         log.info("from={}, size={}", from, size);
@@ -114,7 +114,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getBookingsByOwnerId(long userId, State state, Integer from, Integer size) {
+    public List<Booking> getBookingsByOwnerId(long userId, BookingState state, Integer from, Integer size) {
         userService.checkUser(userId);
         log.debug("Получение бронирования вещей userId={} со state={}", userId, state);
         List<Item> itemList = itemService.getItemsByUserId(userId);
@@ -151,7 +151,7 @@ public class BookingServiceImpl implements BookingService {
         );
     }
 
-    private Stream<Booking> getBookingStream(State state, Item item, PageRequest pr) {
+    private Stream<Booking> getBookingStream(BookingState state, Item item, PageRequest pr) {
         long itemId = item.getId();
         List<Booking> bookings;
         switch (state) {

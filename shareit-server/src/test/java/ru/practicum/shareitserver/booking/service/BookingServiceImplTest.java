@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
-import ru.practicum.shareitserver.booking.State;
+import ru.practicum.shareitserver.booking.BookingState;
 import ru.practicum.shareitserver.booking.Status;
 import ru.practicum.shareitserver.booking.model.entity.Booking;
 import ru.practicum.shareitserver.booking.repository.BookingRepository;
@@ -107,7 +107,7 @@ class BookingServiceImplTest {
                 .when(mockBookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(anyLong(), any(), any()))
                 .thenReturn(new PageImpl<>(sourceBookings));
 
-        List<Booking> targetBookings = bookingServiceImpl.getBookingsByBookerId(USER_1.getId(), State.WAITING, 0, 20);
+        List<Booking> targetBookings = bookingServiceImpl.getBookingsByBookerId(USER_1.getId(), BookingState.WAITING, 0, 20);
         Assertions.assertEquals(sourceBookings.size(), targetBookings.size());
     }
 
@@ -130,7 +130,7 @@ class BookingServiceImplTest {
                     return null;
                 });
 
-        List<Booking> targetBookings = bookingServiceImpl.getBookingsByOwnerId(USER_1.getId(), State.WAITING, 0, 20);
+        List<Booking> targetBookings = bookingServiceImpl.getBookingsByOwnerId(USER_1.getId(), BookingState.WAITING, 0, 20);
         Assertions.assertEquals(sourceBookings.size(), targetBookings.size());
     }
 

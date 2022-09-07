@@ -3,7 +3,7 @@ package ru.practicum.shareitserver.booking.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareitserver.booking.State;
+import ru.practicum.shareitserver.booking.BookingState;
 import ru.practicum.shareitserver.booking.mapper.BookingMapper;
 import ru.practicum.shareitserver.booking.model.dto.BookingRequestDto;
 import ru.practicum.shareitserver.booking.model.dto.BookingResponseDto;
@@ -76,9 +76,9 @@ public class BookingController {
         return BookingMapper.toBookingDtoOut(booking);
     }
 
-    private State toState(String state) {
+    private BookingState toState(String state) {
         try {
-            return State.valueOf(state);
+            return BookingState.valueOf(state);
         } catch (IllegalArgumentException t) {
             throw new BadRequestException("Unknown state: " + state);
         }

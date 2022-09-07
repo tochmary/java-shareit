@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareitserver.booking.State;
+import ru.practicum.shareitserver.booking.BookingState;
 import ru.practicum.shareitserver.booking.Status;
 import ru.practicum.shareitserver.booking.mapper.BookingMapper;
 import ru.practicum.shareitserver.booking.model.dto.BookingRequestDto;
@@ -101,7 +101,7 @@ public class BookingServiceImplTest {
         List<Booking> sourceBookings = List.of(booking1, booking3);
 
         //WHEN
-        List<Booking> targetBookings = service.getBookingsByOwnerId(owner1.getId(), State.WAITING, 0, 20);
+        List<Booking> targetBookings = service.getBookingsByOwnerId(owner1.getId(), BookingState.WAITING, 0, 20);
 
         //THEN
         assertThat(targetBookings, hasSize(sourceBookings.size()));

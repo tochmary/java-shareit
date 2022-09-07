@@ -1,6 +1,6 @@
 package ru.practicum.shareitserver.booking.service;
 
-import ru.practicum.shareitserver.booking.State;
+import ru.practicum.shareitserver.booking.BookingState;
 import ru.practicum.shareitserver.booking.model.entity.Booking;
 import ru.practicum.shareitserver.item.model.entity.Item;
 
@@ -13,9 +13,9 @@ public interface BookingService {
 
     Booking updateBookingStatus(long userId, long bookingId, Boolean approved);
 
-    List<Booking> getBookingsByBookerId(long userId, State state, Integer from, Integer size);
+    List<Booking> getBookingsByBookerId(long userId, BookingState state, Integer from, Integer size);
 
-    List<Booking> getBookingsByOwnerId(long userId, State state, Integer from, Integer size);
+    List<Booking> getBookingsByOwnerId(long userId, BookingState state, Integer from, Integer size);
 
     Booking getLastBookingByItemId(long userId, Item item);
 

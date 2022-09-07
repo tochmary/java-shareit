@@ -8,7 +8,7 @@ package ru.practicum.shareitserver.booking;
  * WAITING - ожидающие подтверждения;
  * REJECTED - отклонённые;
  **/
-public enum State {
+public enum BookingState {
     ALL,
     CURRENT,
     PAST,

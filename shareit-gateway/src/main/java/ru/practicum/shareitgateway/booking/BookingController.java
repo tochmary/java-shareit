@@ -26,23 +26,47 @@ public class BookingController {
                                               @RequestParam(name = "state", defaultValue = "all") String stateParam,
                                               @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        BookingState state = BookingState.toState(stateParam)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-        log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
-        return bookingClient.getBookings(userId, state, from, size);
+        BookingState state = getState(stateParam);
+        log.info("Получение списка бронирований для state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+        return bookingClient.getBookings(userId, state, from, size, false);
     }
 
     @PostMapping
     public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @RequestBody @Valid BookingRequestDto requestDto) {
-        log.info("Creating booking {}, userId={}", requestDto, userId);
+        log.info("Добавление нового бронирования {} пользователем userId={}", requestDto, userId);
         return bookingClient.bookItem(userId, requestDto);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                             @PathVariable Long bookingId) {
-        log.info("Get booking {}, userId={}", bookingId, userId);
+                                             @PathVariable long bookingId) {
+        log.info("Получение данных о бронировании c bookingId={}, userId={}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity<Object> getBookingsByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                       @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
+                                                       @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                                       @Positive @RequestParam(defaultValue = "10") Integer size) {
+        log.info("Получение списка бронирований для всех вещей пользователя c userId={} state {}, from={}, size={}",
+                userId, stateParam, from, size);
+        BookingState state = getState(stateParam);
+        return bookingClient.getBookings(userId, state, from, size, true);
+    }
+
+    @PatchMapping("/{bookingId}")
+    public ResponseEntity<Object> updateBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                @PathVariable long bookingId,
+                                                @RequestParam Boolean approved) {
+        log.info("Подтверждение или отклонение запроса на бронирование " +
+                "с bookingId={} пользователем с userId {}. Подтверждение? {}", bookingId, userId, approved);
+        return bookingClient.updateBooking(bookingId, userId, approved);
+    }
+
+    private BookingState getState(String stateParam) {
+        return BookingState.toState(stateParam)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
     }
 }

@@ -112,13 +112,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Comment> getCommentsByItemId(long itemId) {
-        log.debug("Получения отзывов о вещи с itemId={}", itemId);
+        log.debug("Получение отзывов о вещи с itemId={}", itemId);
         return commentRepository.findAllByItemIdOrderByCreatedDesc(itemId);
     }
 
     @Override
     public List<Item> getItemsByRequestId(long requestId) {
-        log.debug("Получения вещей по запросу requestId={}", requestId);
+        log.debug("Получение вещей по запросу requestId={}", requestId);
         return itemRepository.findItemsByRequestId(requestId);
     }
 

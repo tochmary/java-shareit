@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareitgateway.booking.dto.BookingRequestDto;
 import ru.practicum.shareitgateway.booking.dto.BookingState;
+import ru.practicum.shareitgateway.common.exception.BadRequestException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -67,6 +68,6 @@ public class BookingController {
 
     private BookingState getState(String stateParam) {
         return BookingState.toState(stateParam)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
+                .orElseThrow(() -> new BadRequestException("Unknown state: " + stateParam));
     }
 }

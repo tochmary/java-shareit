@@ -7,13 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.shareitgateway.booking.dto.BookingRequestDto;
-import ru.practicum.shareitgateway.booking.dto.BookingState;
 import ru.practicum.shareitgateway.client.BaseClient;
 import ru.practicum.shareitgateway.user.dto.UserDto;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserClient extends BaseClient {

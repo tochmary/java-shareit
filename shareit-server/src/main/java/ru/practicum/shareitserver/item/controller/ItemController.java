@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareitserver.booking.model.entity.Booking;
 import ru.practicum.shareitserver.booking.service.BookingService;
-import ru.practicum.shareitserver.common.Validation;
 import ru.practicum.shareitserver.item.mapper.CommentMapper;
 import ru.practicum.shareitserver.item.mapper.ItemMapper;
 import ru.practicum.shareitserver.item.model.dto.CommentDto;
@@ -15,7 +14,6 @@ import ru.practicum.shareitserver.item.model.entity.Comment;
 import ru.practicum.shareitserver.item.model.entity.Item;
 import ru.practicum.shareitserver.item.service.ItemService;
 
-import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -33,10 +31,7 @@ public class ItemController {
     public List<ItemFullDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @RequestParam(defaultValue = "0") Integer from,
                                       @RequestParam(defaultValue = "20") Integer size) {
-        log.info("Получение списка вещей владельца с userId={}", userId);
-        log.info("from={}, size={}", from, size);
-        Validation.checkRequestParam("from", from);
-        Validation.checkRequestParam("size", size);
+        log.info("Получение списка вещей владельца с userId={}, from={}, size={}", userId, from, size);
         List<Item> itemList = itemService.getItemsByUserId(userId, from, size);
         return itemList.stream()
                 .map(item -> getItemWithBookDto(userId, item))
@@ -54,7 +49,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                           @Valid @RequestBody ItemDto itemDto) {
+                           @RequestBody ItemDto itemDto) {
         log.info("Добавление вещи {} пользователем с userId={}", itemDto, userId);
         Item item = ItemMapper.toItem(itemDto);
         item = itemService.addItem(userId, item, itemDto.getRequestId());
@@ -76,10 +71,7 @@ public class ItemController {
                                         @RequestParam String text,
                                         @RequestParam(defaultValue = "0") Integer from,
                                         @RequestParam(defaultValue = "20") Integer size) {
-        log.info("Поиск вещей с текстом={} пользователем с userId={}", text, userId);
-        log.info("from={}, size={}", from, size);
-        Validation.checkRequestParam("from", from);
-        Validation.checkRequestParam("size", size);
+        log.info("Поиск вещей с текстом={} пользователем с userId={}, from={}, size={}", text, userId, from, size);
         if (text.isBlank()) {
             return Collections.emptyList();
         }
@@ -90,7 +82,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
                                  @PathVariable long itemId,
-                                 @Valid @RequestBody CommentDto commentDto) {
+                                 @RequestBody CommentDto commentDto) {
         log.info("Добавление отзыва {} пользователем с userId={} о вещи с itemId={}", commentDto, userId, itemId);
         Comment comment = CommentMapper.toComment(commentDto);
         comment = itemService.addComment(userId, itemId, comment);

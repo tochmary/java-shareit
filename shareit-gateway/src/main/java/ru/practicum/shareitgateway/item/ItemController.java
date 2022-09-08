@@ -3,6 +3,7 @@ package ru.practicum.shareitgateway.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareitgateway.item.dto.CommentDto;
 import ru.practicum.shareitgateway.item.dto.ItemDto;
@@ -10,9 +11,9 @@ import ru.practicum.shareitgateway.item.dto.ItemDto;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Collections;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class ItemController {
     @GetMapping
     public ResponseEntity<Object> getItems(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                           @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                           @Positive @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка вещей владельца с userId={}, from={}, size={}", userId, from, size);
         return itemClient.getItemsByUserId(userId, from, size);
     }
@@ -53,7 +54,7 @@ public class ItemController {
     public ResponseEntity<Object> getItemsByText(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                  @RequestParam String text,
                                                  @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                 @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                                 @Positive @RequestParam(defaultValue = "20") Integer size) {
         log.info("Поиск вещей с текстом={} пользователем с userId={}, from={}, size={}\"", text, userId, from, size);
         return itemClient.getItemsByText(userId, text, from, size);
     }

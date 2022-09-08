@@ -3,6 +3,7 @@ package ru.practicum.shareitgateway.requests;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareitgateway.requests.dto.ItemRequestDto;
 
@@ -32,6 +33,7 @@ import javax.validation.constraints.PositiveOrZero;
  * Посмотреть данные об отдельном запросе может любой пользователь.
  */
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/requests")
 @RequiredArgsConstructor
@@ -54,7 +56,7 @@ public class ItemRequestController {
     @GetMapping("/all")
     public ResponseEntity<Object> getItemRequestsAll(@RequestHeader("X-Sharer-User-Id") long userId,
                                                      @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                     @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                                     @Positive @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка запросов, созданных другими пользователями для userId={}, from={}, size={}", userId, from, size);
         return itemRequestClient.getItemRequestsAll(userId, from, size);
     }

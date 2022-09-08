@@ -3,7 +3,6 @@ package ru.practicum.shareitserver.requests.contoller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareitserver.common.Validation;
 import ru.practicum.shareitserver.item.model.entity.Item;
 import ru.practicum.shareitserver.item.service.ItemService;
 import ru.practicum.shareitserver.requests.mapper.ItemRequestMapper;
@@ -11,7 +10,6 @@ import ru.practicum.shareitserver.requests.model.dto.ItemRequestDto;
 import ru.practicum.shareitserver.requests.model.entity.ItemRequest;
 import ru.practicum.shareitserver.requests.service.ItemRequestService;
 
-import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +45,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDto addItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                                         @Valid @RequestBody ItemRequestDto itemRequestDto) {
+                                         @RequestBody ItemRequestDto itemRequestDto) {
         log.info("Добавление нового запроса {} пользователем с userId={}", itemRequestDto, userId);
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestDto);
         itemRequest = itemRequestService.addItemRequest(userId, itemRequest);
@@ -72,8 +70,6 @@ public class ItemRequestController {
                                                    @RequestParam(defaultValue = "0") Integer from,
                                                    @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка запросов, созданных другими пользователями для userId={}, from={}, size={}", userId, from, size);
-        Validation.checkRequestParam("from", from);
-        Validation.checkRequestParam("size", size);
         List<ItemRequest> itemRequestList = itemRequestService.getItemRequestsAll(userId, from, size);
         return itemRequestList.stream()
                 .map(itemRequest -> {

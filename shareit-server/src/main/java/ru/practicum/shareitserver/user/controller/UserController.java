@@ -8,7 +8,6 @@ import ru.practicum.shareitserver.user.model.entity.User;
 import ru.practicum.shareitserver.user.service.UserService;
 import ru.practicum.shareitserver.user.model.dto.UserDto;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -33,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto addUser(@Valid @RequestBody UserDto userDto) {
+    public UserDto addUser(@RequestBody UserDto userDto) {
         log.info("Добавление пользователя {}", userDto);
         User user = UserMapper.toUser(userDto);
         user = userService.addUser(user);

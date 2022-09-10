@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareitserver.common.Constants.X_SHARER_USER_ID;
 
 @WebMvcTest(controllers = ItemRequestController.class)
 class ItemRequestControllerTest {
@@ -57,7 +58,7 @@ class ItemRequestControllerTest {
                 .thenReturn(itemRequest1);
 
         mvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", itemRequest1.getRequestor().getId())
+                        .header(X_SHARER_USER_ID, itemRequest1.getRequestor().getId())
                         .content(mapper.writeValueAsString(ItemRequestMapper.toItemRequestDto(itemRequest1, null)))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -84,7 +85,7 @@ class ItemRequestControllerTest {
                 });
 
         mvc.perform(get("/requests")
-                        .header("X-Sharer-User-Id", user1.getId()))
+                        .header(X_SHARER_USER_ID, user1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(itemRequest1.getId()), Long.class))
                 .andExpect(jsonPath("$[0].description", is(itemRequest1.getDescription())))
@@ -112,7 +113,7 @@ class ItemRequestControllerTest {
                 });
 
         mvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", user2.getId())
+                        .header(X_SHARER_USER_ID, user2.getId())
                         .param("from", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -135,7 +136,7 @@ class ItemRequestControllerTest {
                 .thenReturn(null);
 
         mvc.perform(get("/requests/{requestId}", itemRequest1.getId())
-                        .header("X-Sharer-User-Id", itemRequest1.getRequestor().getId()))
+                        .header(X_SHARER_USER_ID, itemRequest1.getRequestor().getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(itemRequest1.getId()), Long.class))
                 .andExpect(jsonPath("$.description", is(itemRequest1.getDescription())))
@@ -153,7 +154,7 @@ class ItemRequestControllerTest {
                 .thenReturn(List.of(item1));
 
         mvc.perform(get("/requests/{requestId}", itemRequest2.getId())
-                        .header("X-Sharer-User-Id", itemRequest2.getRequestor().getId()))
+                        .header(X_SHARER_USER_ID, itemRequest2.getRequestor().getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(itemRequest2.getId()), Long.class))
                 .andExpect(jsonPath("$.description", is(itemRequest2.getDescription())))

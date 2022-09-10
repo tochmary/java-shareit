@@ -8,6 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareitgateway.client.BaseClient;
+import ru.practicum.shareitgateway.common.Utility;
 import ru.practicum.shareitgateway.item.dto.CommentDto;
 import ru.practicum.shareitgateway.item.dto.ItemDto;
 
@@ -36,7 +37,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getItemById(long userId, long itemId) {
-        return get("/" + itemId, userId);
+        return get(Utility.buildPath(itemId), userId);
     }
 
     public ResponseEntity<Object> addItem(long userId, ItemDto itemDto) {
@@ -44,7 +45,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> updateItem(Long userId, long itemId, ItemDto itemDto) {
-        return patch("/" + itemId, userId, itemDto);
+        return patch(Utility.buildPath(itemId), userId, itemDto);
     }
 
     public ResponseEntity<Object> getItemsByText(Long userId, String text, Integer from, Integer size) {
@@ -57,6 +58,6 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> addComment(long userId, long itemId, CommentDto commentDto) {
-        return post("/" + itemId + "/comment", userId, commentDto);
+        return post(Utility.buildPath(itemId, "/comment"), userId, commentDto);
     }
 }

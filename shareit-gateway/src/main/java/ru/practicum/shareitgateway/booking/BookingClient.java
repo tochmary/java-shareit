@@ -10,6 +10,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareitgateway.booking.dto.BookingRequestDto;
 import ru.practicum.shareitgateway.booking.dto.BookingState;
 import ru.practicum.shareitgateway.client.BaseClient;
+import ru.practicum.shareitgateway.common.Utility;
 
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class BookingClient extends BaseClient {
                 "from", from,
                 "size", size
         );
-        String path = (isOwner ? "/owner" : "") + "?state={state}&from={from}&size={size}";
+        String path = Utility.buildPath((isOwner ? "owner" : ""), "?state={state}&from={from}&size={size}");
         return get(path, userId, parameters);
     }
 
@@ -43,11 +44,11 @@ public class BookingClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getBooking(long userId, long bookingId) {
-        return get("/" + bookingId, userId);
+        return get(Utility.buildPath(bookingId), userId);
     }
 
     public ResponseEntity<Object> updateBooking(long bookingId, long userId, Boolean approved) {
         Map<String, Object> parameters = Map.of("approved", approved);
-        return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
+        return patch(Utility.buildPath(bookingId, "?approved={approved}"), userId, parameters, null);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareitgateway.client.BaseClient;
+import ru.practicum.shareitgateway.common.Utility;
 import ru.practicum.shareitgateway.requests.dto.ItemRequestDto;
 
 import java.util.Map;
@@ -39,11 +40,10 @@ public class ItemRequestClient extends BaseClient {
                 "from", from,
                 "size", size
         );
-        String path = "/all?from={from}&size={size}";
-        return get(path, userId, parameters);
+        return get("/all?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> getItemRequest(long userId, long requestId) {
-        return get("/" + requestId, userId);
+        return get(Utility.buildPath(requestId), userId);
     }
 }

@@ -12,6 +12,8 @@ import ru.practicum.shareitserver.booking.service.BookingService;
 
 import java.util.List;
 
+import static ru.practicum.shareitserver.common.Constants.X_SHARER_USER_ID;
+
 @Slf4j
 @RestController
 @RequestMapping(path = "/bookings")
@@ -20,7 +22,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping("/{bookingId}")
-    public BookingResponseDto getBookingById(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingResponseDto getBookingById(@RequestHeader(X_SHARER_USER_ID) long userId,
                                              @PathVariable long bookingId) {
         log.info("Получение данных о бронировании c bookingId={} для пользователя c userId={}", bookingId, userId);
         Booking booking = bookingService.getBookingById(userId, bookingId);
@@ -28,7 +30,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public List<BookingResponseDto> getBookingsByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId,
+    public List<BookingResponseDto> getBookingsByOwnerId(@RequestHeader(X_SHARER_USER_ID) long userId,
                                                          @RequestParam(defaultValue = "ALL") String state,
                                                          @RequestParam(defaultValue = "0") Integer from,
                                                          @RequestParam(defaultValue = "20") Integer size) {
@@ -40,7 +42,7 @@ public class BookingController {
 
 
     @GetMapping
-    public List<BookingResponseDto> getBookingsByBookerId(@RequestHeader("X-Sharer-User-Id") long userId,
+    public List<BookingResponseDto> getBookingsByBookerId(@RequestHeader(X_SHARER_USER_ID) long userId,
                                                           @RequestParam(defaultValue = "ALL") String state,
                                                           @RequestParam(defaultValue = "0") Integer from,
                                                           @RequestParam(defaultValue = "20") Integer size) {
@@ -51,7 +53,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingResponseDto addBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingResponseDto addBooking(@RequestHeader(X_SHARER_USER_ID) long userId,
                                          @RequestBody BookingRequestDto bookingRequestDto) {
         log.info("Добавление нового бронирования {} пользователем userId={}", bookingRequestDto, userId);
         Booking booking = BookingMapper.toBooking(bookingRequestDto);
@@ -60,7 +62,7 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingResponseDto updateBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingResponseDto updateBooking(@RequestHeader(X_SHARER_USER_ID) long userId,
                                             @PathVariable long bookingId,
                                             @RequestParam Boolean approved) {
         log.info("Подтверждение или отклонение запроса на бронирование " +

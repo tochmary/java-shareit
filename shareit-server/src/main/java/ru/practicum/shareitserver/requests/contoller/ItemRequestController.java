@@ -14,6 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.shareitserver.common.Constants.X_SHARER_USER_ID;
+
 /**
  * POST /requests — добавить новый запрос вещи.
  * Основная часть запроса — текст запроса, где пользователь описывает, какая именно вещь ему нужна.
@@ -44,7 +46,7 @@ public class ItemRequestController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemRequestDto addItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemRequestDto addItemRequest(@RequestHeader(X_SHARER_USER_ID) long userId,
                                          @RequestBody ItemRequestDto itemRequestDto) {
         log.info("Добавление нового запроса {} пользователем с userId={}", itemRequestDto, userId);
         ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestDto);
@@ -53,7 +55,7 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public List<ItemRequestDto> getItemRequests(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemRequestDto> getItemRequests(@RequestHeader(X_SHARER_USER_ID) long userId) {
         log.info("Получение списка запросов вместе с данными об ответах на них для владельца с userId={}", userId);
         List<ItemRequest> itemRequestList = itemRequestService.getItemRequestsByUserId(userId);
         return itemRequestList.stream()
@@ -66,7 +68,7 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getItemRequestsAll(@RequestHeader("X-Sharer-User-Id") long userId,
+    public List<ItemRequestDto> getItemRequestsAll(@RequestHeader(X_SHARER_USER_ID) long userId,
                                                    @RequestParam(defaultValue = "0") Integer from,
                                                    @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка запросов, созданных другими пользователями для userId={}, from={}, size={}", userId, from, size);
@@ -81,7 +83,7 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDto getItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemRequestDto getItemRequest(@RequestHeader(X_SHARER_USER_ID) long userId,
                                          @PathVariable long requestId) {
         log.info("Получение о запросе requestId={} вместе с данными об ответах для userId={}",
                 requestId, userId);

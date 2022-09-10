@@ -19,6 +19,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.shareitserver.common.Constants.X_SHARER_USER_ID;
+
 @Slf4j
 @RestController
 @RequestMapping("/items")
@@ -28,7 +30,7 @@ public class ItemController {
     private final BookingService bookingService;
 
     @GetMapping
-    public List<ItemFullDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId,
+    public List<ItemFullDto> getItems(@RequestHeader(X_SHARER_USER_ID) long userId,
                                       @RequestParam(defaultValue = "0") Integer from,
                                       @RequestParam(defaultValue = "20") Integer size) {
         log.info("Получение списка вещей владельца с userId={}, from={}, size={}", userId, from, size);
@@ -40,7 +42,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemFullDto getItemById(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemFullDto getItemById(@RequestHeader(X_SHARER_USER_ID) long userId,
                                    @PathVariable long itemId) {
         log.info("Просмотр вещи с itemId={} пользователем с userId={}", itemId, userId);
         Item item = itemService.getItemId(userId, itemId);
@@ -48,7 +50,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemDto addItem(@RequestHeader(X_SHARER_USER_ID) long userId,
                            @RequestBody ItemDto itemDto) {
         log.info("Добавление вещи {} пользователем с userId={}", itemDto, userId);
         Item item = ItemMapper.toItem(itemDto);
@@ -57,7 +59,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ItemDto updateItem(@RequestHeader(X_SHARER_USER_ID) Long userId,
                               @PathVariable long itemId,
                               @RequestBody ItemDto itemDto) {
         log.info("Обновление вещи {} с itemId={} пользователем с userId={}", itemDto, itemId, userId);
@@ -67,7 +69,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> getItemsByText(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public List<ItemDto> getItemsByText(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                         @RequestParam String text,
                                         @RequestParam(defaultValue = "0") Integer from,
                                         @RequestParam(defaultValue = "20") Integer size) {
@@ -80,7 +82,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+    public CommentDto addComment(@RequestHeader(X_SHARER_USER_ID) long userId,
                                  @PathVariable long itemId,
                                  @RequestBody CommentDto commentDto) {
         log.info("Добавление отзыва {} пользователем с userId={} о вещи с itemId={}", commentDto, userId, itemId);

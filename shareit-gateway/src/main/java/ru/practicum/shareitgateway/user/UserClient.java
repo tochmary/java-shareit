@@ -8,6 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareitgateway.client.BaseClient;
+import ru.practicum.shareitgateway.common.Utility;
 import ru.practicum.shareitgateway.user.dto.UserDto;
 
 @Service
@@ -29,7 +30,7 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getUserById(long userId) {
-        return get("/" + userId);
+        return get(Utility.buildPath(userId));
     }
 
     public ResponseEntity<Object> addUser(UserDto userDto) {
@@ -37,10 +38,10 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> updateUser(long userId, UserDto userDto) {
-        return patch("/" + userId, userDto);
+        return patch(Utility.buildPath(userId), userDto);
     }
 
     public ResponseEntity<Object> deleteUser(long userId) {
-        return delete("/" + userId);
+        return delete(Utility.buildPath(userId));
     }
 }

@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.practicum.shareitserver.common.Constants.X_SHARER_USER_ID;
 
 @WebMvcTest(controllers = ItemController.class)
 class ItemControllerTest {
@@ -65,7 +66,7 @@ class ItemControllerTest {
                 .thenReturn(null);
 
         mvc.perform(get("/items")
-                        .header("X-Sharer-User-Id", 1L))
+                        .header(X_SHARER_USER_ID, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(item1.getId()), Long.class))
                 .andExpect(jsonPath("$[0].name", is(item1.getName())))
@@ -98,7 +99,7 @@ class ItemControllerTest {
                 .thenReturn(null);
 
         mvc.perform(get("/items/{itemId}", user1.getId())
-                        .header("X-Sharer-User-Id", 1L))
+                        .header(X_SHARER_USER_ID, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(item1.getId()), Long.class))
                 .andExpect(jsonPath("$.name", is(item1.getName())))
@@ -116,7 +117,7 @@ class ItemControllerTest {
                 .thenReturn(item1);
 
         mvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", item1.getOwner().getId())
+                        .header(X_SHARER_USER_ID, item1.getOwner().getId())
                         .content(mapper.writeValueAsString(ItemMapper.toItemDto(item1)))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -136,7 +137,7 @@ class ItemControllerTest {
                 .thenReturn(item1);
 
         mvc.perform(patch("/items/{itemId}", item1.getId())
-                        .header("X-Sharer-User-Id", item1.getOwner().getId())
+                        .header(X_SHARER_USER_ID, item1.getOwner().getId())
                         .content(mapper.writeValueAsString(ItemMapper.toItemDto(item1)))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -158,7 +159,7 @@ class ItemControllerTest {
 
         List<ItemDto> itemDtoList = ItemMapper.toItemDtoList(items);
         mvc.perform(get("/items/search")
-                        .header("X-Sharer-User-Id", 1L)
+                        .header(X_SHARER_USER_ID, 1L)
                         .param("text", "сувен")
                         .param("from", "0")
                         .param("size", "10")
@@ -174,7 +175,7 @@ class ItemControllerTest {
                 .thenReturn(comment1);
 
         mvc.perform(post("/items/{itemId}/comment", comment1.getItem().getId())
-                        .header("X-Sharer-User-Id", item1.getOwner().getId())
+                        .header(X_SHARER_USER_ID, item1.getOwner().getId())
                         .content(mapper.writeValueAsString(CommentMapper.toCommentDto(comment1)))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)

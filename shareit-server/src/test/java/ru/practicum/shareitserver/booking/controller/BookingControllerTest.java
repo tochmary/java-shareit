@@ -26,6 +26,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.practicum.shareitserver.common.Constants.X_SHARER_USER_ID;
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest {
@@ -59,7 +60,7 @@ class BookingControllerTest {
                 .thenReturn(booking1);
 
         mvc.perform(get("/bookings/{bookingId}", booking1.getId())
-                        .header("X-Sharer-User-Id", booking1.getBooker().getId()))
+                        .header(X_SHARER_USER_ID, booking1.getBooker().getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(booking1.getId()), Long.class))
                 .andExpect(jsonPath("$.start", is(booking1.getStart().format(formatter))))
@@ -78,7 +79,7 @@ class BookingControllerTest {
 
         List<BookingResponseDto> bookingResponseDtoList = BookingMapper.toBookingDtoList(bookings);
         mvc.perform(get("/bookings/owner")
-                        .header("X-Sharer-User-Id", booking1.getItem().getOwner().getId())
+                        .header(X_SHARER_USER_ID, booking1.getItem().getOwner().getId())
                         .param("state", "ALL")
                         .param("from", "0")
                         .param("size", "20"))
@@ -95,7 +96,7 @@ class BookingControllerTest {
 
         List<BookingResponseDto> bookingResponseDtoList = BookingMapper.toBookingDtoList(bookings);
         mvc.perform(get("/bookings")
-                        .header("X-Sharer-User-Id", booking1.getBooker().getId())
+                        .header(X_SHARER_USER_ID, booking1.getBooker().getId())
                         .param("state", "ALL")
                         .param("from", "0")
                         .param("size", "20"))
@@ -110,7 +111,7 @@ class BookingControllerTest {
                 .thenReturn(booking1);
 
         mvc.perform(post("/bookings")
-                        .header("X-Sharer-User-Id", booking1.getBooker().getId())
+                        .header(X_SHARER_USER_ID, booking1.getBooker().getId())
                         .content(mapper.writeValueAsString(BookingMapper.toBookingDto(booking1)))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -133,7 +134,7 @@ class BookingControllerTest {
                 .thenReturn(newBooking);
 
         mvc.perform(patch("/bookings/{bookingId}", booking1.getId())
-                        .header("X-Sharer-User-Id", booking1.getBooker().getId())
+                        .header(X_SHARER_USER_ID, booking1.getBooker().getId())
                         .param("approved", String.valueOf(true))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
